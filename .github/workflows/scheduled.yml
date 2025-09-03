@@ -1,0 +1,20 @@
+name: Scheduled Demo
+
+# This runs daily at 00:00 UTC. Add workflow_dispatch for manual testing.
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  scheduled-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show current UTC time
+        run: |
+          echo "This workflow was triggered by: ${{ github.event_name }}"
+          echo "UTC time now:"
+          date -u

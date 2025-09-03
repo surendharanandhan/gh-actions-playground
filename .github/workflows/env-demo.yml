@@ -1,0 +1,43 @@
+name: Env & Environment Demo
+
+on:
+  workflow_dispatch:    # manual run for testing
+  push:                 # also run on push
+
+# workflow-level env (uses repo variable)
+env:
+  APP_NAME: ${{ vars.APP_NAME }}
+  GLOBAL_MSG: "Workflow-level greeting"
+
+jobs:
+  demo:
+    name: Demo job (uses environment 'staging')
+    runs-on: ubuntu-latest
+    environment: staging   # associates this job with the staging Environment
+    env:
+      JOB_ENV: staging
+      # (optional) show how job-level can override workflow-level
+      APP_NAME: ${{ vars.APP_NAME }}-joboverride
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show workflow & job env (shell view)
+        run: |
+          echo "---- Effective environment variables ----"
+          echo "APP_NAME (in shell)      : $APP_NAME"
+          echo "GLOBAL_MSG               : $GLOBAL_MSG"
+          echo "JOB_ENV                  : $JOB_ENV"
+
+      - name: Step-level override demo
+        env:
+          STEP_NOTE: "I am step-scoped"
+          APP_NAME: "step-override-value"
+        run: |
+          echo "---- Step-level override ----"
+          echo "STEP_NOTE                : $STEP_NOTE"
+          echo "APP_NAME (step override) : $APP_NAME"
+
+      - name: Done
+        run: echo "Demo finished"

@@ -1,0 +1,21 @@
+name: Windows runner demo
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  win-info:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show basic Windows info (PowerShell)
+        shell: pwsh
+        run: |
+          Write-Host "Hello from GitHub-hosted windows-latest"
+          # show basic OS info (concise)
+          $os = Get-CimInstance -ClassName Win32_OperatingSystem
+          Write-Host "OS:" $os.Caption
+          Write-Host "Version:" $os.Version
